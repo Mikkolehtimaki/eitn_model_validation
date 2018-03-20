@@ -25,11 +25,16 @@ def main(filenames):
     inh = get_neuron_type(data[0], 'inh')[0]
     print(np.shape(exc))
     print(np.shape(inh))
+    sorted_neurons = np.concatenate((exc, inh))
 
     # Plot a raster
     # y should grow with neuron index
     # x should be x
-    plt.scatter(exc[0], np.ones(exc[0].shape))
+    for idx, neuron in enumerate(sorted_neurons):
+        print(type(neuron))
+        color = 'red' if neuron.annotations['neuron_type'] == 'exc' else 'blue'
+        plt.scatter(neuron, idx * np.ones(neuron.shape), s=0.1, c=color)
+
     plt.show()
 
 def get_neuron_type(data, neuron_type):

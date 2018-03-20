@@ -19,19 +19,24 @@ def main(filenames):
     # 'neuron_type' to get exc or inh
     # All annotations ['behav.segm.', 'neuron_type', 'unit_id', 'sua']
 
+    plot_raster(data[0])
+
+def plot_raster(data):
+    """
+    Plot raster for one measured dataset. Data should be in shape
+    num_recordings, timesteps
+    """
+
     # Get excitatory neurons of the first dataset
     # And drop the inds
-    exc = get_neuron_type(data[0], 'exc')[0]
-    inh = get_neuron_type(data[0], 'inh')[0]
-    print(np.shape(exc))
-    print(np.shape(inh))
+    exc = get_neuron_type(data, 'exc')[0]
+    inh = get_neuron_type(data, 'inh')[0]
     sorted_neurons = np.concatenate((exc, inh))
 
     # Plot a raster
     # y should grow with neuron index
     # x should be x
     for idx, neuron in enumerate(sorted_neurons):
-        print(type(neuron))
         color = 'red' if neuron.annotations['neuron_type'] == 'exc' else 'blue'
         plt.scatter(neuron, idx * np.ones(neuron.shape), s=0.1, c=color)
 

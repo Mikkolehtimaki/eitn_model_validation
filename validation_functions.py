@@ -70,4 +70,29 @@ def kw_pairwise(data):
 
     return kw_statistics
 
+def filter_data(data, neuron_type=None, behavior=None):
+    """
+    Filter the given list of spike trains on neuron type if given and on
+    behavior if given
+    """
+    allowed_types = ['exc', 'inh']
+    allowed_behaviors = ['M', 'RS']
+    # Do nothing if nothing asked
+    if neuron_type == None and behavior == None:
+        return data
 
+    if neuron_type in allowed_types:
+        data = get_neuron_type(data, neuron_type)[0]
+    # Filtering for behavior times is a bit more verbose
+    if behavior in allowed_behaviors:
+        # Extract the annotations, they are same for all neurons in the dataset
+        filtered = []
+        state_times = data[0].annotations['behav.segm.'][behavior]
+        for d in data:  # Loop over the spike times
+            f = []  # Create a list where we append spike times as we filter
+                    # through the segments
+            for segment in state_times:
+                f.append(d[(d >= segment[0]) & (d < segment[0]+segment[1])])
+            filtered.extend(f)
+        data = filtered
+    return data

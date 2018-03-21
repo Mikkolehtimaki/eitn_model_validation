@@ -88,7 +88,6 @@ def filter_data(data, neuron_type=None, behavior=None):
         # Extract the annotations, they are same for all neurons in the dataset
         filtered = []
         state_times = data[0].annotations['behav.segm.'][behavior]
-        print(state_times)
         for d in data:  # Loop over the spike times
             f = []  # Create a list where we append spike times as we filter
                     # through the segments

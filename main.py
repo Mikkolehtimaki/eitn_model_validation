@@ -2,7 +2,8 @@ import sys
 
 import neo
 import numpy as np
-import matplotlib.pyplot as plt
+
+import validation_functions
 
 def main(filenames):
     """TODO: Docstring for main.
@@ -15,43 +16,28 @@ def main(filenames):
     print(data[0].shape) # 120 spike trains per list
     print(type(data[0][0])) # neo spike train object
     print(data[0][0].shape) # Spike train array
-    print(data[0][0].annotations) # Dict of neo stuff
+    # print(data[0][0].annotations) # Dict of neo stuff
     # 'neuron_type' to get exc or inh
     # All annotations ['behav.segm.', 'neuron_type', 'unit_id', 'sua']
 
-    plot_raster(data[0])
+    validation_functions.plot_raster(data[0])
 
-def plot_raster(data):
-    """
-    Plot raster for one measured dataset. Data should be in shape
-    num_recordings, timesteps
-    """
+    # Interspike intervals for one dataset
+    # isi_list = [isi(x) for x in data[0]]
+    # print(np.shape(isi_list))
 
-    # Get excitatory neurons of the first dataset
-    # And drop the inds
-    exc = get_neuron_type(data, 'exc')[0]
-    inh = get_neuron_type(data, 'inh')[0]
-    sorted_neurons = np.concatenate((exc, inh))
+    # Example of calculating mean firing rates of all neurons in one
+    # measurement
+    mfrs = [validation_functions.mean_firing_rate(x) for x in data[0]]
+    print(type(mfrs[0]))
 
-    # Plot a raster
-    # y should grow with neuron index
-    # x should be x
-    for idx, neuron in enumerate(sorted_neurons):
-        color = 'red' if neuron.annotations['neuron_type'] == 'exc' else 'blue'
-        plt.scatter(neuron, idx * np.ones(neuron.shape), s=0.1, c=color)
+    # Bin spike trains
+    # binned_spikes = conversion.BinnedSpikeTrain(data[0], num_bins=50)
+    # print(type(binned_spikes))
+    # print(dir(binned_spikes))
+    # print(np.shape(binned_spikes.spike_indices))
+    # Do cch
 
-    plt.show()
-
-def get_neuron_type(data, neuron_type):
-    """
-        Filters the data for a given neuron_type (exc or inh)
-        Example use: data_exc, eIds = get_neuron_type(data1, 'exc')
-    """
-    ids = []
-    for i in xrange(len(data)):
-        if data[i].annotations['neuron_type'] == neuron_type:
-            ids.append(i)
-    return data[ids], ids
 
 if __name__ == "__main__":
     main(sys.argv[1:])

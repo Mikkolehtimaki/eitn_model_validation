@@ -1,4 +1,7 @@
 import numpy as np
+import scipy
+from scipy.stats import kruskal
+import seaborn as sbs
 import matplotlib.pyplot as plt
 from elephant.statistics import isi
 from elephant.spike_train_correlation import cch
@@ -46,3 +49,25 @@ def get_neuron_type(data, neuron_type):
         if data[i].annotations['neuron_type'] == neuron_type:
             ids.append(i)
     return data[ids], ids
+
+def kw_pairwise(data):
+    """
+    Test data pairwise in all permutations with the Kruskal Wallis test
+    :param data: independent measurements, for example list of lists of spike trains
+    :param neuron_type: 'exc', 'inh' if specific neuron type is wanted
+    """
+    kw_statistics = []
+    for sample1 in data:
+        temp = []
+        for sample2 in data:
+            s, p = kruskal(sample1, sample2)
+            temp.append(p)
+        kw_statistics.append(temp)
+
+    sbs.heatmap(kw_statistics, annot=True)
+    plt.title("Kruskal-Wallis H-test")
+    plt.show()
+
+    return kw_statistics
+
+

@@ -92,10 +92,8 @@ def filter_data(data, neuron_type=None, behavior=None):
         for d in data:  # Loop over the spike times
             f = []  # Create a list where we append spike times as we filter
                     # through the segments
-            d = d.magnitude
             for segment in state_times:
                 f.append(d[(d >= segment[0]) & (d < segment[0]+segment[1])])
-            f = np.concatenate(f)
-            filtered.append(f)
+            filtered.extend(f)
         data = filtered
     return data

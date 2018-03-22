@@ -20,7 +20,7 @@ def mean_firing_rate(spike_train):
     measurement_length = spike_train.t_stop - spike_train.t_start
     return np.divide(num_spikes, measurement_length.magnitude)
 
-def plot_raster(data, sorting=False):
+def plot_raster(data, sorting=False, max_time=None, title='Raster plot'):
     """
     Plot raster for one measured dataset. Data should be a list of recordings
     (SpikeTrain objects)
@@ -41,8 +41,16 @@ def plot_raster(data, sorting=False):
     for idx, neuron in enumerate(sorted_neurons):
         color = 'red' if neuron.annotations['neuron_type'] == 'exc' else 'blue'
         plt.scatter(neuron, idx * np.ones(neuron.shape), s=0.1, c=color)
+        plt.xlabel('Time (s)')
+        plt.ylabel('Neuron')
+        plt.title(title)
 
-    plt.show()
+    if max_time:
+        plt.xlim((0, max_time))
+
+    # plt.show()
+    # return plt
+
 
 def get_neuron_type(data, neuron_type):
     """

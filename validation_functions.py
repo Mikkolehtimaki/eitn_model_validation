@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 import scipy
 from scipy.stats import kruskal
@@ -115,3 +117,18 @@ def filter_data(data, neuron_type=None, behavior=None, window_len=0.5):
                 filtered.extend(f)
         data = filtered
     return data
+
+def get_all_data():
+    """
+    Function for returning all data in the dataset
+    """
+    data_folder = 'data'
+    data_names = [
+        'data1.npy',
+        'data2.npy',
+        'data3.npy',
+        'data4.npy',
+        'data5.npy',
+        'data6.npy',
+    ]
+    return [np.load(os.path.join(data_folder, x)) for x in data_names]

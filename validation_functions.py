@@ -77,6 +77,7 @@ def filter_data(data, neuron_type=None, behavior=None, window_len=0.5):
     """
     allowed_types = ['exc', 'inh']
     allowed_behaviors = ['M', 'RS', 'T']
+    allowed_transitions = ['to', 'from']
     # Do nothing if nothing asked
     if neuron_type == None and behavior == None:
         return data
@@ -88,21 +89,19 @@ def filter_data(data, neuron_type=None, behavior=None, window_len=0.5):
         # Extract the annotations, they are same for all neurons in the dataset
         filtered = []
         if behavior == 'T':
+            # Transitions _to moving_ state, ugly hardcoded mess
             transitions = []
             transitions.extend(data[0].annotations['behav.segm.']['M'])
-            transitions.extend(data[0].annotations['behav.segm.']['RS'])
+            # transitions.extend(data[0].annotations['behav.segm.']['RS'])
             print(len(transitions))
             for d in data:  # Loop over the spike trains
                 f = []  # Create a list where we append spike times as we filter
                         # through the segments
                 for segment in transitions:
                     s1 = segment[0]
-                    s2 = segment[0] + segment[1]
                     f.append(d[(d >= s1 - window_len) & (d < s1 + window_len)])
-                    f.append(d[(d >= s2 - window_len) & (d < s2 + window_len)])
-                    # f.append(d[(d >= segment[0] - window_len) & (d < segment[0] + window_len)])
-                    # f.append(d[(d >= segment[0] + segment[1] - window_len)
-                    #          & (d < segment[0] + segment[1] + window_len)])
+                    # s2 = segment[0] + segment[1]
+                    # f.append(d[(d >= s2 - window_len) & (d < s2 + window_len)])
                 print(f)
                 print(transitions)
                 filtered.extend(f)

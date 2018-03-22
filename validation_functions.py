@@ -112,7 +112,6 @@ def filter_data(data, neuron_type=None, behavior=None, window_len=0.5):
             transitions = []
             transitions.extend(data[0].annotations['behav.segm.']['M'])
             # transitions.extend(data[0].annotations['behav.segm.']['RS'])
-            print(len(transitions))
             for d in data:  # Loop over the spike trains
                 f = []  # Create a list where we append spike times as we filter
                         # through the segments
@@ -121,8 +120,6 @@ def filter_data(data, neuron_type=None, behavior=None, window_len=0.5):
                     f.append(d[(d >= s1 - window_len) & (d < s1 + window_len)])
                     # s2 = segment[0] + segment[1]
                     # f.append(d[(d >= s2 - window_len) & (d < s2 + window_len)])
-                print(f)
-                print(transitions)
                 filtered.extend(f)
         else:
             state_times = data[0].annotations['behav.segm.'][behavior]

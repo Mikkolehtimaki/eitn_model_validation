@@ -20,7 +20,7 @@ def mean_firing_rate(spike_train):
     measurement_length = spike_train.t_stop - spike_train.t_start
     return np.divide(num_spikes, measurement_length.magnitude)
 
-def plot_raster(data):
+def plot_raster(data, sorting=False):
     """
     Plot raster for one measured dataset. Data should be a list of recordings
     (SpikeTrain objects)
@@ -30,6 +30,9 @@ def plot_raster(data):
     # And drop the inds
     exc = get_neuron_type(data, 'exc')[0]
     inh = get_neuron_type(data, 'inh')[0]
+    if sorting:
+        exc = sorted(exc, key=len)
+        inh = sorted(inh, key=len)
     sorted_neurons = np.concatenate((exc, inh))
 
     # Plot a raster

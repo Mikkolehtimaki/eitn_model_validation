@@ -50,7 +50,7 @@ def get_neuron_type(data, neuron_type):
             ids.append(i)
     return data[ids], ids
 
-def kw_pairwise(data):
+def kw_pairwise(data, title="Kurskal-Wallis H-test"):
     """
     Test data pairwise in all permutations with the Kruskal Wallis test
     :param data: independent measurements, for example list of lists of spike trains
@@ -65,7 +65,7 @@ def kw_pairwise(data):
         kw_statistics.append(temp)
 
     sbs.heatmap(kw_statistics, annot=True)
-    plt.title("Kruskal-Wallis H-test")
+    plt.title(title)
     plt.show()
 
     return kw_statistics

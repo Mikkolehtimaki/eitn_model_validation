@@ -20,7 +20,8 @@ def mean_firing_rate(spike_train):
     measurement_length = spike_train.t_stop - spike_train.t_start
     return np.divide(num_spikes, measurement_length.magnitude)
 
-def plot_raster(data, sorting=False, max_time=None, title='Raster plot'):
+def plot_raster(data, sorting=False, max_time=None, title='Raster plot',
+                bg_alpha=0.25):
     """
     Plot raster for one measured dataset. Data should be a list of recordings
     (SpikeTrain objects)
@@ -36,20 +37,25 @@ def plot_raster(data, sorting=False, max_time=None, title='Raster plot'):
     sorted_neurons = np.concatenate((exc, inh))
 
     # Plot a raster
-    # y should grow with neuron index
-    # x should be x
     for idx, neuron in enumerate(sorted_neurons):
         color = 'red' if neuron.annotations['neuron_type'] == 'exc' else 'blue'
         plt.scatter(neuron, idx * np.ones(neuron.shape), s=0.1, c=color)
-        plt.xlabel('Time (s)')
-        plt.ylabel('Neuron')
-        plt.title(title)
+
+    # Color the background based on movement annotations
+    m_segments = data[0].annotations['behav.segm.']['M']
+    for s in m_segments:
+        plt.axvspan(s[0], s[0]+s[1], facecolor='y', alpha=bg_alpha)
+
+    m_segments = data[0].annotations['behav.segm.']['RS']
+    for s in m_segments:
+        plt.axvspan(s[0], s[0]+s[1], facecolor='g', alpha=bg_alpha)
+
+    plt.xlabel('Time (s)')
+    plt.ylabel('Neuron')
+    plt.title(title)
 
     if max_time:
         plt.xlim((0, max_time))
-
-    # plt.show()
-    # return plt
 
 
 def get_neuron_type(data, neuron_type):
@@ -77,7 +83,7 @@ def kw_pairwise(data, title="Kurskal-Wallis H-test"):
             temp.append(p)
         kw_statistics.append(temp)
 
-    sbs.heatmap(kw_statistics, annot=True)
+    sbs.heatmap(kw_statistics, annot=True, cmap='viridis')
     plt.title(title)
     plt.show()
 
